@@ -4,7 +4,6 @@ import requests
 
 from dashy.sources.reddit.types import WorldNews
 
-
 REDDIT_URL = "https://www.reddit.com/r/worldnews/top.json?sort=top&t=day"
 USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"

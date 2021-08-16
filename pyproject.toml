@@ -25,6 +25,7 @@ ipdb = "^0.13.9"
 pdbpp = "^0.10.3"
 pytest = "^6.2.4"
 pytest-clarity = "^1.0.1"
+types-requests = "^2.25.6"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
