@@ -6,9 +6,9 @@ authors = ["Axel <dev@absalon.is>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 requests = "^2.26.0"
-Pillow = "^8.3.1"
+#Pillow = "^8.3.1"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.9.3"
