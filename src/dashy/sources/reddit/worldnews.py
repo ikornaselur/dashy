@@ -1,5 +1,5 @@
 from textwrap import wrap
-from typing import Iterator, List, Tuple
+from typing import Iterator, Tuple
 
 import requests
 
@@ -19,7 +19,7 @@ SEPERATOR = " | "
 Header = Tuple[int, str]  # Score + Title
 
 
-def _get_source(max_entries: int = 5) -> List[Header]:
+def _get_source(max_entries: int = 5) -> Iterator[Header]:
     response = requests.get(REDDIT_URL, headers={"User-Agent": USER_AGENT})
     response.raise_for_status()
 
@@ -27,7 +27,8 @@ def _get_source(max_entries: int = 5) -> List[Header]:
     data = response_json["data"]
     entries = data["children"][:max_entries]
 
-    return [(entry["data"]["ups"], entry["data"]["title"]) for entry in entries]
+    for entry in entries:
+        yield (entry["data"]["ups"], entry["data"]["title"])
 
 
 def top_news(max_width: int) -> Iterator[str]:
