@@ -31,9 +31,9 @@ def _get_source(max_entries: int = 5) -> Iterator[Header]:
         yield (entry["data"]["ups"], entry["data"]["title"])
 
 
-def top_news(max_width: int) -> Iterator[str]:
+def get_top_news(max_width: int, *, max_entries: int = 5) -> Iterator[str]:
     title_width = max_width - UPS_WIDTH - len(SEPERATOR)
-    for entry in _get_source():
+    for entry in _get_source(max_entries):
         ups = f"{entry[0]:>{UPS_WIDTH},}"
         title = entry[1]
         if len(title) < title_width:
