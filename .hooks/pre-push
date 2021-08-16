@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Checking if code lints..."
+xargs -P 2 -I {} sh -c 'eval ""' - {} <<'EOF'
+make mypy
+make flake8
