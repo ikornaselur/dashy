@@ -26,11 +26,17 @@ class WorldNews(Source):
     title_width: int
 
     def __init__(
-        self, max_lines: int, max_width: int, *, max_story_lines: int = 3
+        self,
+        max_lines: int,
+        max_width: int,
+        *,
+        max_story_lines: int = 3,
+        max_age: int = 24,  # No stories can be above 24 hour old
     ) -> None:
         super().__init__(max_lines, max_width)
         self.max_story_lines = max_story_lines
         self.title_width = self.max_width - UPS_WIDTH - len(SEPERATOR)
+        self.max_age = max_age
 
     def _get_source(self) -> Iterator[Header]:
         response = requests.get(REDDIT_URL, headers={"User-Agent": USER_AGENT})
@@ -46,6 +52,9 @@ class WorldNews(Source):
                 data["created_utc"]
             )
             age_in_hours = delta.seconds // 3600
+            if age_in_hours > self.max_age:
+                # Skip stories that are too old
+                continue
             yield (data["ups"], data["title"], age_in_hours)
 
     def _yield_story(self, ups: int, title: str, age_in_hours: int) -> Iterator[str]:
@@ -77,7 +86,6 @@ class WorldNews(Source):
         lines = 0
 
         for ups, title, age_in_hours in self._get_source():
-
             for story_line in self._yield_story(ups, title, age_in_hours):
                 yield story_line
                 lines += 1
