@@ -1,4 +1,4 @@
-from typing import List
+from typing import Iterator
 
 
 class Source:
@@ -9,5 +9,5 @@ class Source:
         self.max_lines = max_lines
         self.max_width = max_width
 
-    def get_lines(self) -> List[str]:
+    def get_lines(self) -> Iterator[str]:
         raise NotImplementedError()

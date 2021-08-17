@@ -1,5 +1,8 @@
+from typing import Any
+
 import mock
 import pytest
+from freezegun import freeze_time
 
 from dashy.sources.openweathermap.weather import Weather
 
@@ -72,12 +75,13 @@ MOCK_WEATHER = {
 
 
 @pytest.fixture(autouse=True)
-def mock_openweathermap_env(monkeypatch) -> None:
+def mock_openweathermap_env(monkeypatch: Any) -> None:
     monkeypatch.setenv("OPENWEATHERMAP_LAT", "1")
     monkeypatch.setenv("OPENWEATHERMAP_LON", "1")
     monkeypatch.setenv("OPENWEATHERMAP_API_KEY", "1")
 
 
+@freeze_time("2020-01-01", tz_offset=0)
 def test_weather_every_hour() -> None:
     weather = Weather(20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=1)
     with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
@@ -85,19 +89,41 @@ def test_weather_every_hour() -> None:
 
     expected = [
         "Hour  Weather             Temp Hum Rain Wind ",
-        "13:00 Slight Rain         18°C 55% 2mm  3m/s ",
-        "14:00 Slight Rain         19°C 52% 2mm  3m/s ",
-        "15:00 Cloudy              19°C 51%      4m/s ",
-        "16:00 Sunny               20°C 52%      1m/s ",
-        "17:00 Sunny               21°C 52%      1m/s ",
-        "18:00 Very Sunny          23°C 49%      2m/s ",
-        "19:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
-        "20:00 Tropical Storm      26°C 89% 54mm 27m/s",
+        "12:00 Slight Rain         18°C 55% 2mm  3m/s ",
+        "13:00 Slight Rain         19°C 52% 2mm  3m/s ",
+        "14:00 Cloudy              19°C 51%      4m/s ",
+        "15:00 Sunny               20°C 52%      1m/s ",
+        "16:00 Sunny               21°C 52%      1m/s ",
+        "17:00 Very Sunny          23°C 49%      2m/s ",
+        "18:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
+        "19:00 Tropical Storm      26°C 89% 54mm 27m/s",
     ]
 
     assert rows == expected
 
 
+@freeze_time("2020-01-01", tz_offset=5)
+def test_weather_different_timezone() -> None:
+    weather = Weather(20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=1)
+    with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
+        rows = list(weather.get_lines())
+
+    expected = [
+        "Hour  Weather             Temp Hum Rain Wind ",
+        "17:00 Slight Rain         18°C 55% 2mm  3m/s ",
+        "18:00 Slight Rain         19°C 52% 2mm  3m/s ",
+        "19:00 Cloudy              19°C 51%      4m/s ",
+        "20:00 Sunny               20°C 52%      1m/s ",
+        "21:00 Sunny               21°C 52%      1m/s ",
+        "22:00 Very Sunny          23°C 49%      2m/s ",
+        "23:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
+        "00:00 Tropical Storm      26°C 89% 54mm 27m/s",
+    ]
+
+    assert rows == expected
+
+
+@freeze_time("2020-01-01", tz_offset=0)
 def test_weather_every_other_hour() -> None:
     weather = Weather(20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=2)
     with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
@@ -105,15 +131,16 @@ def test_weather_every_other_hour() -> None:
 
     expected = [
         "Hour  Weather             Temp Hum Rain Wind ",
-        "13:00 Slight Rain         18°C 55% 2mm  3m/s ",
-        "15:00 Cloudy              19°C 51%      4m/s ",
-        "17:00 Sunny               21°C 52%      1m/s ",
-        "19:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
+        "12:00 Slight Rain         18°C 55% 2mm  3m/s ",
+        "14:00 Cloudy              19°C 51%      4m/s ",
+        "16:00 Sunny               21°C 52%      1m/s ",
+        "18:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
     ]
 
     assert rows == expected
 
 
+@freeze_time("2020-01-01", tz_offset=0)
 def test_weather_every_third_hour() -> None:
     weather = Weather(20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=3)
     with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
@@ -121,14 +148,15 @@ def test_weather_every_third_hour() -> None:
 
     expected = [
         "Hour  Weather             Temp Hum Rain Wind ",
-        "13:00 Slight Rain         18°C 55% 2mm  3m/s ",
-        "16:00 Sunny               20°C 52%      1m/s ",
-        "19:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
+        "12:00 Slight Rain         18°C 55% 2mm  3m/s ",
+        "15:00 Sunny               20°C 52%      1m/s ",
+        "18:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
     ]
 
     assert rows == expected
 
 
+@freeze_time("2020-01-01", tz_offset=0)
 def test_weather_hiding_title() -> None:
     weather = Weather(20, 40, lat="1", lon="1", api_key="", rows=10, every_hours=1)
     with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
@@ -136,19 +164,20 @@ def test_weather_hiding_title() -> None:
 
     expected = [
         "Hour  Weather        Temp Hum Rain Wind ",
-        "13:00 Slight Rain    18°C 55% 2mm  3m/s ",
-        "14:00 Slight Rain    19°C 52% 2mm  3m/s ",
-        "15:00 Cloudy         19°C 51%      4m/s ",
-        "16:00 Sunny          20°C 52%      1m/s ",
-        "17:00 Sunny          21°C 52%      1m/s ",
-        "18:00 Very Sunny     23°C 49%      2m/s ",
-        "19:00 Overcast Clo.. 22°C 51% 2mm  2m/s ",
-        "20:00 Tropical Storm 26°C 89% 54mm 27m/s",
+        "12:00 Slight Rain    18°C 55% 2mm  3m/s ",
+        "13:00 Slight Rain    19°C 52% 2mm  3m/s ",
+        "14:00 Cloudy         19°C 51%      4m/s ",
+        "15:00 Sunny          20°C 52%      1m/s ",
+        "16:00 Sunny          21°C 52%      1m/s ",
+        "17:00 Very Sunny     23°C 49%      2m/s ",
+        "18:00 Overcast Clo.. 22°C 51% 2mm  2m/s ",
+        "19:00 Tropical Storm 26°C 89% 54mm 27m/s",
     ]
 
     assert rows == expected
 
 
+@freeze_time("2020-01-01", tz_offset=0)
 def test_weather_skip_header() -> None:
     weather = Weather(
         20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=3, header=False
@@ -157,9 +186,9 @@ def test_weather_skip_header() -> None:
         rows = list(weather.get_lines())
 
     expected = [
-        "13:00 Slight Rain         18°C 55% 2mm  3m/s ",
-        "16:00 Sunny               20°C 52%      1m/s ",
-        "19:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
+        "12:00 Slight Rain         18°C 55% 2mm  3m/s ",
+        "15:00 Sunny               20°C 52%      1m/s ",
+        "18:00 Overcast Clouds     22°C 51% 2mm  2m/s ",
     ]
 
     assert rows == expected

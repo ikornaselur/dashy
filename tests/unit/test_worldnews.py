@@ -3,7 +3,6 @@ import pytest
 
 from dashy.sources.reddit.worldnews import WorldNews
 
-
 MOCK_NEWS = [
     (
         54321,
