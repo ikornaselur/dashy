@@ -1,3 +1,5 @@
+from typing import Any
+
 import mock
 import pytest
 
@@ -72,7 +74,7 @@ MOCK_WEATHER = {
 
 
 @pytest.fixture(autouse=True)
-def mock_openweathermap_env(monkeypatch) -> None:
+def mock_openweathermap_env(monkeypatch: Any) -> None:
     monkeypatch.setenv("OPENWEATHERMAP_LAT", "1")
     monkeypatch.setenv("OPENWEATHERMAP_LON", "1")
     monkeypatch.setenv("OPENWEATHERMAP_API_KEY", "1")

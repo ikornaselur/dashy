@@ -1,8 +1,8 @@
 mypy:
-	@poetry run mypy src/dashy/*  # tests/*
+	@poetry run mypy src/dashy/* tests/*
 
 flake8:
-	@poetry run flake8 src/dashy/*  # tests/*
+	@poetry run flake8 src/dashy/* tests/*
 
 lint: mypy flake8
 

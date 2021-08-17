@@ -709,6 +709,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "types-mock"
+version = "0.1.5"
+description = "Typing stubs for mock"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "types-requests"
 version = "2.25.6"
 description = "Typing stubs for requests"
@@ -765,10 +773,13 @@ python-versions = ">=3.6"
 docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
+[extras]
+pillow = ["Pillow"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "23f568e8f28e1db3af056742e84809c6df44dc46d866aa30976052343a1cc655"
+content-hash = "c1b9b291fa4eb35ea344262f95e3a40196e21ebb02d6ce10a467e375f5a210eb"
 
 [metadata.files]
 appdirs = [
@@ -1129,6 +1140,10 @@ typed-ast = [
     {file = "typed_ast-1.4.3-cp39-cp39-win32.whl", hash = "sha256:209596a4ec71d990d71d5e0d312ac935d86930e6eecff6ccc7007fe54d703808"},
     {file = "typed_ast-1.4.3-cp39-cp39-win_amd64.whl", hash = "sha256:9c6d1a54552b5330bc657b7ef0eae25d00ba7ffe85d9ea8ae6540d2197a3788c"},
     {file = "typed_ast-1.4.3.tar.gz", hash = "sha256:fb1bbeac803adea29cedd70781399c99138358c26d05fcbd23c13016b7f5ec65"},
+]
+types-mock = [
+    {file = "types-mock-0.1.5.tar.gz", hash = "sha256:5a658d21068487af0eac0e207a51f9df8b03ba9dbfdb3a19d679fef3d49578a5"},
+    {file = "types_mock-0.1.5-py3-none-any.whl", hash = "sha256:117be0fcbcc8dddc49b966999e8126f67a7a83904627d5cf2d1c3fb4fb620527"},
 ]
 types-requests = [
     {file = "types-requests-2.25.6.tar.gz", hash = "sha256:e21541c0f55c066c491a639309159556dd8c5833e49fcde929c4c47bdb0002ee"},
