@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dashy"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 authors = ["Axel <dev@absalon.is>"]
 license = "MIT"
