@@ -1,7 +1,7 @@
 import mock
 import pytest
 
-from dashy.sources.openweathermap.weather import get_weather
+from dashy.sources.openweathermap.weather import Weather
 
 HOURS = 3600
 
@@ -79,10 +79,9 @@ def mock_openweathermap_env(monkeypatch) -> None:
 
 
 def test_weather_every_hour() -> None:
-    with mock.patch(
-        "dashy.sources.openweathermap.weather._get_source", return_value=MOCK_WEATHER
-    ):
-        rows = list(get_weather(45, rows=10, every_hours=1))
+    weather = Weather(20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=1)
+    with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
+        rows = list(weather.get_lines())
 
     expected = [
         "Hour  Weather             Temp Hum Rain Wind ",
@@ -100,10 +99,9 @@ def test_weather_every_hour() -> None:
 
 
 def test_weather_every_other_hour() -> None:
-    with mock.patch(
-        "dashy.sources.openweathermap.weather._get_source", return_value=MOCK_WEATHER
-    ):
-        rows = list(get_weather(45, rows=10, every_hours=2))
+    weather = Weather(20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=2)
+    with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
+        rows = list(weather.get_lines())
 
     expected = [
         "Hour  Weather             Temp Hum Rain Wind ",
@@ -117,10 +115,9 @@ def test_weather_every_other_hour() -> None:
 
 
 def test_weather_every_third_hour() -> None:
-    with mock.patch(
-        "dashy.sources.openweathermap.weather._get_source", return_value=MOCK_WEATHER
-    ):
-        rows = list(get_weather(45, rows=10, every_hours=3))
+    weather = Weather(20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=3)
+    with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
+        rows = list(weather.get_lines())
 
     expected = [
         "Hour  Weather             Temp Hum Rain Wind ",
@@ -133,10 +130,9 @@ def test_weather_every_third_hour() -> None:
 
 
 def test_weather_hiding_title() -> None:
-    with mock.patch(
-        "dashy.sources.openweathermap.weather._get_source", return_value=MOCK_WEATHER
-    ):
-        rows = list(get_weather(40, rows=10, every_hours=1))
+    weather = Weather(20, 40, lat="1", lon="1", api_key="", rows=10, every_hours=1)
+    with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
+        rows = list(weather.get_lines())
 
     expected = [
         "Hour  Weather        Temp Hum Rain Wind ",
@@ -154,10 +150,11 @@ def test_weather_hiding_title() -> None:
 
 
 def test_weather_skip_header() -> None:
-    with mock.patch(
-        "dashy.sources.openweathermap.weather._get_source", return_value=MOCK_WEATHER
-    ):
-        rows = list(get_weather(45, rows=10, every_hours=3, header=False))
+    weather = Weather(
+        20, 45, lat="1", lon="1", api_key="", rows=10, every_hours=3, header=False
+    )
+    with mock.patch.object(weather, "_get_source", return_value=MOCK_WEATHER):
+        rows = list(weather.get_lines())
 
     expected = [
         "13:00 Slight Rain         18°C 55% 2mm  3m/s ",

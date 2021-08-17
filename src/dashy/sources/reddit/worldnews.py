@@ -25,7 +25,7 @@ class WorldNews(Source):
     title_width: int
 
     def __init__(
-        self, max_lines: int, max_width: int, max_story_lines: int = 3
+        self, max_lines: int, max_width: int, *, max_story_lines: int = 3
     ) -> None:
         super().__init__(max_lines, max_width)
         self.max_story_lines = max_story_lines
