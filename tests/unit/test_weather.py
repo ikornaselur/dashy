@@ -1,10 +1,10 @@
 from typing import Any
 
-from freezegun import freeze_time
 import mock
+import pytest
+from freezegun import freeze_time
 
 from dashy.sources.openweathermap.weather import Weather
-import pytest
 
 HOURS = 3600
 
