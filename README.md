@@ -12,23 +12,23 @@ weather, would look like this:
 
 ```
 Hour  Weather                  Temp Hum Rain Wind 
-11:00 Broken Clouds            16°C 80%      4m/s 
-14:00 Overcast Clouds          18°C 72%      5m/s 
+11:00 Broken Clouds            16°C 78%      4m/s 
+14:00 Overcast Clouds          17°C 74%      5m/s 
 17:00 Overcast Clouds          18°C 73%      4m/s 
 20:00 Overcast Clouds          17°C 74%      4m/s 
 23:00 Overcast Clouds          16°C 79%      4m/s 
-47,455 | Iceland is proof that COVID-19 vaccines
-       | work, a leading US expert said...
-22,994 | Chinese state media says Afghanistan a
-       | lesson for Taiwan on how U.S. abandons..
-12,332 | UK Defense Minister Blames Trump for
-       | Afghanistan Taliban Crisis
- 4,543 | The Amazon is burning again. "The federal
-       | government continues incentivizing..
- 4,241 | Afghan Embassy in India Called Afghan
-       | President Ashraf Ghani a "Traitor"
- 3,688 | Hamas congratulates Taliban for
-       | ‘defeating’ US
+47,652 | Iceland is proof that COVID-19 vaccines
+   14h | work, a leading US expert said...
+25,095 | Chinese state media says Afghanistan a
+    8h | lesson for Taiwan on how U.S. abandons..
+ 3,787 | Hamas congratulates Taliban for
+   12h | ‘defeating’ US
+ 3,662 | Footage of Taliban fighters playing at an
+    7h | amusement park, after Kabul takeover.
+ 1,990 | India says doors open to Afghan's Sikh
+   18h | and Hindu minorities
+ 1,702 | Saudi Arabia urges Taliban to protect
+   17h | lives under 'Islamic principles'
 ```
 
 which is then output to a Inky Impression screen:
