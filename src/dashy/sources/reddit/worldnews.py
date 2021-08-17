@@ -1,3 +1,4 @@
+import datetime as dt
 from textwrap import wrap
 from typing import Iterator, Tuple
 
@@ -17,7 +18,7 @@ USER_AGENT = (
 UPS_WIDTH = 6
 SEPERATOR = " | "
 
-Header = Tuple[int, str]  # Score + Title
+Header = Tuple[int, str, int]  # score + title + age in hours
 
 
 class WorldNews(Source):
@@ -40,16 +41,23 @@ class WorldNews(Source):
         entries = data["children"]
 
         for entry in entries:
-            yield (entry["data"]["ups"], entry["data"]["title"])
+            data = entry["data"]
+            delta = dt.datetime.utcnow() - dt.datetime.fromtimestamp(
+                data["created_utc"]
+            )
+            age_in_hours = delta.seconds // 3600
+            yield (data["ups"], data["title"], age_in_hours)
 
-    def _yield_story(self, ups: str, title: str) -> Iterator[str]:
+    def _yield_story(self, ups: int, title: str, age_in_hours: int) -> Iterator[str]:
         story_lines = 0
+        age_in_hours_str = f"{age_in_hours}h"
+        left_col = [f"{age_in_hours_str:>{UPS_WIDTH}}", f"{ups:>{UPS_WIDTH},}"]
 
         wrapped_lines = wrap(title, self.title_width)
 
         for idx, line in enumerate(wrapped_lines):
-            formatted_line = f"{ups}{SEPERATOR}{line}"
-            ups = " " * UPS_WIDTH
+            left = left_col.pop() if left_col else " " * UPS_WIDTH
+            formatted_line = f"{left}{SEPERATOR}{line}"
 
             story_lines += 1
             if story_lines == self.max_story_lines:
@@ -60,7 +68,7 @@ class WorldNews(Source):
                 else:
                     # We need to remove the last word potentially
                     line = wrap(line, self.title_width - 2)[0]
-                    yield f"{ups}{SEPERATOR}{line}.."
+                    yield f"{left}{SEPERATOR}{line}.."
                 break
 
             yield formatted_line
@@ -68,11 +76,9 @@ class WorldNews(Source):
     def get_lines(self) -> Iterator[str]:
         lines = 0
 
-        for entry in self._get_source():
-            ups = f"{entry[0]:>{UPS_WIDTH},}"
-            title = entry[1]
+        for ups, title, age_in_hours in self._get_source():
 
-            for story_line in self._yield_story(ups, title):
+            for story_line in self._yield_story(ups, title, age_in_hours):
                 yield story_line
                 lines += 1
                 if lines == self.max_lines:

@@ -3,6 +3,7 @@ from typing_extensions import TypedDict
 
 
 class ChildData(TypedDict):
+    created_utc: int
     title: str
     ups: int
 
