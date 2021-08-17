@@ -69,11 +69,7 @@ class Weather(Source):
             yield ("Hour", "Weather", "Temp", "Hum", "Rain", "Wind")
 
         for hour in hourly[: self.rows * self.every_hours : self.every_hours]:
-            timestamp = (
-                dt.datetime.fromtimestamp(hour["dt"])
-                .replace(tzinfo=dt.timezone.utc)
-                .strftime("%H:%M")
-            )
+            timestamp = dt.datetime.fromtimestamp(hour["dt"]).strftime("%H:%M")
             temp = f"{hour['temp']:.0f}°C"
             humidity = f"{hour['humidity']}%"
             wind = f"{hour['wind_speed']:.0f}m/s"
