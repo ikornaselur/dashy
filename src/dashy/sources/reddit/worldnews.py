@@ -13,9 +13,9 @@ USER_AGENT = (
     " (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
 )
 
-# Most upvotes will fit within 6 characters (up to 100k), with a rare
-# every now and then being above 100k
-UPS_WIDTH = 6
+# Upvotes will fit within 4 characters, as it will be shortened to "ks",
+# that is 56789 will be 57k, 123456 will be 123k
+UPS_WIDTH = 4
 SEPERATOR = " | "
 
 Header = Tuple[int, str, int]  # score + title + age in hours
@@ -60,7 +60,10 @@ class WorldNews(Source):
     def _yield_story(self, ups: int, title: str, age_in_hours: int) -> Iterator[str]:
         story_lines = 0
         age_in_hours_str = f"{age_in_hours}h"
-        left_col = [f"{age_in_hours_str:>{UPS_WIDTH}}", f"{ups:>{UPS_WIDTH},}"]
+        left_col = [
+            f"{age_in_hours_str:>{UPS_WIDTH}}",
+            f"{round(ups / 1000):>{UPS_WIDTH-1},}k",
+        ]
 
         wrapped_lines = wrap(title, self.title_width)
 

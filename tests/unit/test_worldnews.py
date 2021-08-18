@@ -5,7 +5,7 @@ from dashy.sources.reddit.worldnews import WorldNews
 
 MOCK_NEWS = [
     (
-        54321,
+        154321,
         (
             "Everything You Wanted to Know About LLAMAS "
             "and Were Too Embarrassed to Ask"
@@ -42,18 +42,18 @@ def test_world_news_max_width(width: int) -> None:
 
 
 def test_world_news_word_wrapping_short() -> None:
-    world_news = WorldNews(max_lines=6, max_width=30, max_story_lines=5)
+    world_news = WorldNews(max_lines=6, max_width=28, max_story_lines=5)
 
     with mock.patch.object(world_news, "_get_source", return_value=MOCK_NEWS):
         news = list(world_news.get_lines())
 
     assert news == [
-        "54,321 | Everything You Wanted",
-        "   10h | to Know About LLAMAS",
-        "       | and Were Too",
-        "       | Embarrassed to Ask",
-        "45,231 | Should Fixing LLAMAS",
-        "   15h | Take 60 Steps?",
+        "154k | Everything You Wanted",
+        " 10h | to Know About LLAMAS",
+        "     | and Were Too",
+        "     | Embarrassed to Ask",
+        " 45k | Should Fixing LLAMAS",
+        " 15h | Take 60 Steps?",
     ]
 
 
@@ -64,30 +64,30 @@ def test_world_news_word_wrapping_long() -> None:
         news = list(world_news.get_lines())
 
     assert news == [
-        "54,321 | Everything You Wanted to Know About LLAMAS and Were",
-        "   10h | Too Embarrassed to Ask",
-        "45,231 | Should Fixing LLAMAS Take 60 Steps?",
-        "35,813 | Secrets To Getting SHIBA INU To Complete Tasks",
-        "    7h | Quickly And Efficiently And Correctly",
-        "24,913 | Why are all the headlines I generated with some",
-        "   22h | online generator super clickbaity? Click here and",
-        "       | find out!",
+        "154k | Everything You Wanted to Know About LLAMAS and Were",
+        " 10h | Too Embarrassed to Ask",
+        " 45k | Should Fixing LLAMAS Take 60 Steps?",
+        " 36k | Secrets To Getting SHIBA INU To Complete Tasks",
+        "  7h | Quickly And Efficiently And Correctly",
+        " 25k | Why are all the headlines I generated with some",
+        " 22h | online generator super clickbaity? Click here and",
+        "     | find out!",
     ]
 
 
 def test_world_news_trimming_individual_stories() -> None:
-    world_news = WorldNews(max_lines=5, max_width=47, max_story_lines=2)
+    world_news = WorldNews(max_lines=5, max_width=45, max_story_lines=2)
 
     with mock.patch.object(world_news, "_get_source", return_value=MOCK_NEWS):
         news = list(world_news.get_lines())
 
     assert news == [
-        "54,321 | Everything You Wanted to Know About",
+        "154k | Everything You Wanted to Know About",
         # Last line below and fits 47 width
-        "   10h | LLAMAS and Were Too Embarrassed to Ask",
-        "45,231 | Should Fixing LLAMAS Take 60 Steps?",
-        "35,813 | Secrets To Getting SHIBA INU To",
+        " 10h | LLAMAS and Were Too Embarrassed to Ask",
+        " 45k | Should Fixing LLAMAS Take 60 Steps?",
+        " 36k | Secrets To Getting SHIBA INU To",
         # Exactly 47 width, but there are more lines, so
         # the last word is cut off and replaced with ..
-        "    7h | Complete Tasks Quickly And..",
+        "  7h | Complete Tasks Quickly And..",
     ]
