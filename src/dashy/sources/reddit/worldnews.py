@@ -16,7 +16,10 @@ USER_AGENT = (
 # Upvotes will fit within 4 characters, as it will be shortened to "ks",
 # that is 56789 will be 57k, 123456 will be 123k
 UPS_WIDTH = 4
-SEPERATOR = " | "
+SEP_WIDTH = 3
+TOP_SEP = "┬"
+SEP = "│"
+BOTTOM_SEP = "┴"
 
 Header = Tuple[int, str, int]  # score + title + age in hours
 
@@ -35,7 +38,7 @@ class WorldNews(Source):
     ) -> None:
         super().__init__(max_lines, max_width)
         self.max_story_lines = max_story_lines
-        self.title_width = self.max_width - UPS_WIDTH - len(SEPERATOR)
+        self.title_width = self.max_width - UPS_WIDTH - SEP_WIDTH
         self.max_age = max_age
 
     def _get_source(self) -> Iterator[Header]:
@@ -66,9 +69,17 @@ class WorldNews(Source):
         ]
 
         wrapped_lines = wrap(title, self.title_width)
+        line_count = len(wrapped_lines)
 
         for idx, line in enumerate(wrapped_lines):
             left = left_col.pop() if left_col else " " * UPS_WIDTH
+            if idx == 0:
+                SEPERATOR = f" {TOP_SEP} "
+            elif idx == line_count - 1 or idx == self.max_story_lines - 1:
+                SEPERATOR = f" {BOTTOM_SEP} "
+            else:
+                SEPERATOR = f" {SEP} "
+
             formatted_line = f"{left}{SEPERATOR}{line}"
 
             story_lines += 1
