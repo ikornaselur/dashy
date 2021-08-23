@@ -1,7 +1,7 @@
 import mock
+import pytest
 
 from dashy.sources.reddit.worldnews import WorldNews
-import pytest
 
 MOCK_NEWS = [
     (
@@ -39,14 +39,6 @@ def test_world_news_max_width(width: int) -> None:
     with mock.patch.object(world_news, "_get_source", return_value=MOCK_NEWS):
         for row in world_news.get_lines():
             assert len(row) <= width, f"Expected {width} length, got {len(row)}"
-
-
-"""
-TOP_SEP = "┬"
-SEP = "│"
-BOTTOM_SEP = "┴"
-
-"""
 
 
 def test_world_news_word_wrapping_short() -> None:
