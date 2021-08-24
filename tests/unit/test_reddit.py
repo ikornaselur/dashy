@@ -1,7 +1,7 @@
 import mock
+import pytest
 
 from dashy.sources.reddit import TopPosts
-import pytest
 
 MOCK_NEWS = [
     (
