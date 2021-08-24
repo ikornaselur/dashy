@@ -1,7 +1,7 @@
 import mock
-import pytest
 
 from dashy.sources.reddit import TopPosts
+import pytest
 
 MOCK_NEWS = [
     (
@@ -48,12 +48,12 @@ def test_world_news_word_wrapping_short() -> None:
         news = list(world_news.get_lines())
 
     assert news == [
-        "154k ┬ Everything You Wanted",
+        "154k ╒ Everything You Wanted",
         " 10h │ to Know About LLAMAS",
         "     │ and Were Too",
-        "     ┴ Embarrassed to Ask",
-        " 45k ┬ Should Fixing LLAMAS",
-        " 15h ┴ Take 60 Steps?",
+        "     ╘ Embarrassed to Ask",
+        " 45k ╒ Should Fixing LLAMAS",
+        " 15h ╘ Take 60 Steps?",
     ]
 
 
@@ -64,14 +64,14 @@ def test_world_news_word_wrapping_long() -> None:
         news = list(world_news.get_lines())
 
     assert news == [
-        "154k ┬ Everything You Wanted to Know About LLAMAS and Were",
-        " 10h ┴ Too Embarrassed to Ask",
-        " 45k ┬ Should Fixing LLAMAS Take 60 Steps?",
-        " 36k ┬ Secrets To Getting SHIBA INU To Complete Tasks",
-        "  7h ┴ Quickly And Efficiently And Correctly",
-        " 25k ┬ Why are all the headlines I generated with some",
+        "154k ╒ Everything You Wanted to Know About LLAMAS and Were",
+        " 10h ╘ Too Embarrassed to Ask",
+        " 45k — Should Fixing LLAMAS Take 60 Steps?",
+        " 36k ╒ Secrets To Getting SHIBA INU To Complete Tasks",
+        "  7h ╘ Quickly And Efficiently And Correctly",
+        " 25k ╒ Why are all the headlines I generated with some",
         " 22h │ online generator super clickbaity? Click here and",
-        "     ┴ find out!",
+        "     ╘ find out!",
     ]
 
 
@@ -82,12 +82,12 @@ def test_world_news_trimming_individual_stories() -> None:
         news = list(world_news.get_lines())
 
     assert news == [
-        "154k ┬ Everything You Wanted to Know About",
+        "154k ╒ Everything You Wanted to Know About",
         # Last line below and fits 47 width
-        " 10h ┴ LLAMAS and Were Too Embarrassed to Ask",
-        " 45k ┬ Should Fixing LLAMAS Take 60 Steps?",
-        " 36k ┬ Secrets To Getting SHIBA INU To",
+        " 10h ╘ LLAMAS and Were Too Embarrassed to Ask",
+        " 45k — Should Fixing LLAMAS Take 60 Steps?",
+        " 36k ╒ Secrets To Getting SHIBA INU To",
         # Exactly 47 width, but there are more lines, so
         # the last word is cut off and replaced with ..
-        "  7h ┴ Complete Tasks Quickly And..",
+        "  7h ╘ Complete Tasks Quickly And..",
     ]

@@ -17,9 +17,10 @@ USER_AGENT = (
 # that is 56789 will be 57k, 123456 will be 123k
 UPS_WIDTH = 4
 SEP_WIDTH = 3
-TOP_SEP = "┬"
+TOP_SEP = "╒"
 SEP = "│"
-BOTTOM_SEP = "┴"
+BOTTOM_SEP = "╘"
+SINGLE_LINE_SEP = "—"
 
 Header = Tuple[int, str, int]  # score + title + age in hours
 
@@ -54,15 +55,15 @@ class TopPosts(Source):
         entries = data["children"]
 
         for entry in entries:
-            data = entry["data"]
+            entry_data = entry["data"]
             delta = dt.datetime.utcnow() - dt.datetime.fromtimestamp(
-                data["created_utc"]
+                entry_data["created_utc"]
             )
             age_in_hours = delta.seconds // 3600
             if age_in_hours > self.max_age:
                 # Skip stories that are too old
                 continue
-            yield (data["ups"], data["title"], age_in_hours)
+            yield (entry_data["ups"], entry_data["title"], age_in_hours)
 
     def _yield_story(self, ups: int, title: str, age_in_hours: int) -> Iterator[str]:
         story_lines = 0
@@ -77,7 +78,9 @@ class TopPosts(Source):
 
         for idx, line in enumerate(wrapped_lines):
             left = left_col.pop() if left_col else " " * UPS_WIDTH
-            if idx == 0:
+            if line_count == 1:
+                SEPERATOR = f" {SINGLE_LINE_SEP} "
+            elif idx == 0:
                 SEPERATOR = f" {TOP_SEP} "
             elif idx == line_count - 1 or idx == self.max_story_lines - 1:
                 SEPERATOR = f" {BOTTOM_SEP} "
