@@ -1,5 +1,4 @@
 from typing import List
-
 from typing_extensions import TypedDict
 
 
@@ -18,6 +17,6 @@ class Data(TypedDict):
     children: List[ChildrenItem]
 
 
-class WorldNews(TypedDict):
+class Posts(TypedDict):
     kind: str
     data: Data

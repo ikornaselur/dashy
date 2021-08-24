@@ -7,7 +7,7 @@ import requests
 from dashy.sources import Source
 from dashy.sources.reddit import types
 
-REDDIT_URL = "https://www.reddit.com/r/worldnews/top.json?sort=top&t=day"
+REDDIT_URL = "https://www.reddit.com/r/{subreddit}/top.json?sort=top&t=day"
 USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
     " (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
@@ -24,8 +24,10 @@ BOTTOM_SEP = "┴"
 Header = Tuple[int, str, int]  # score + title + age in hours
 
 
-class WorldNews(Source):
+class TopPosts(Source):
+    max_age: int
     max_story_lines: int
+    subreddit_url: str
     title_width: int
 
     def __init__(
@@ -33,19 +35,21 @@ class WorldNews(Source):
         max_lines: int,
         max_width: int,
         *,
-        max_story_lines: int = 3,
+        subreddit: str,
         max_age: int = 24,  # No stories can be above 24 hour old
+        max_story_lines: int = 3,
     ) -> None:
         super().__init__(max_lines, max_width)
         self.max_story_lines = max_story_lines
         self.title_width = self.max_width - UPS_WIDTH - SEP_WIDTH
         self.max_age = max_age
+        self.subreddit_url = REDDIT_URL.format(subreddit=subreddit)
 
     def _get_source(self) -> Iterator[Header]:
-        response = requests.get(REDDIT_URL, headers={"User-Agent": USER_AGENT})
+        response = requests.get(self.subreddit_url, headers={"User-Agent": USER_AGENT})
         response.raise_for_status()
 
-        response_json: types.WorldNews = response.json()
+        response_json: types.Posts = response.json()
         data = response_json["data"]
         entries = data["children"]
 

@@ -1,7 +1,7 @@
 import mock
 import pytest
 
-from dashy.sources.reddit.worldnews import WorldNews
+from dashy.sources.reddit import TopPosts
 
 MOCK_NEWS = [
     (
@@ -34,7 +34,7 @@ MOCK_NEWS = [
 
 @pytest.mark.parametrize("width", range(20, 61, 10))
 def test_world_news_max_width(width: int) -> None:
-    world_news = WorldNews(6, width)
+    world_news = TopPosts(6, width, subreddit="")
 
     with mock.patch.object(world_news, "_get_source", return_value=MOCK_NEWS):
         for row in world_news.get_lines():
@@ -42,7 +42,7 @@ def test_world_news_max_width(width: int) -> None:
 
 
 def test_world_news_word_wrapping_short() -> None:
-    world_news = WorldNews(max_lines=6, max_width=28, max_story_lines=5)
+    world_news = TopPosts(max_lines=6, max_width=28, max_story_lines=5, subreddit="")
 
     with mock.patch.object(world_news, "_get_source", return_value=MOCK_NEWS):
         news = list(world_news.get_lines())
@@ -58,7 +58,7 @@ def test_world_news_word_wrapping_short() -> None:
 
 
 def test_world_news_word_wrapping_long() -> None:
-    world_news = WorldNews(max_lines=8, max_width=60, max_story_lines=5)
+    world_news = TopPosts(max_lines=8, max_width=60, max_story_lines=5, subreddit="")
 
     with mock.patch.object(world_news, "_get_source", return_value=MOCK_NEWS):
         news = list(world_news.get_lines())
@@ -76,7 +76,7 @@ def test_world_news_word_wrapping_long() -> None:
 
 
 def test_world_news_trimming_individual_stories() -> None:
-    world_news = WorldNews(max_lines=5, max_width=45, max_story_lines=2)
+    world_news = TopPosts(max_lines=5, max_width=45, max_story_lines=2, subreddit="")
 
     with mock.patch.object(world_news, "_get_source", return_value=MOCK_NEWS):
         news = list(world_news.get_lines())
