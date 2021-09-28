@@ -47,7 +47,11 @@ class TopPosts(Source):
         self.subreddit_url = REDDIT_URL.format(subreddit=subreddit)
 
     def _get_source(self) -> Iterator[Header]:
-        response = requests.get(self.subreddit_url, headers={"User-Agent": USER_AGENT})
+        response = requests.get(
+            self.subreddit_url,
+            headers={"User-Agent": USER_AGENT},
+            timeout=10,  # Seconds
+        )
         response.raise_for_status()
 
         response_json: types.Posts = response.json()

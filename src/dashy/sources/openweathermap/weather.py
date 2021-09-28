@@ -55,6 +55,7 @@ class Weather(Source):
                 "exclude": "current,daily,alerts,minutely",
                 "appid": self.api_key,
             },
+            timeout=10,  # Seconds
         )
         response.raise_for_status()
 
